@@ -1,12 +1,12 @@
 $(document).ready(function() {
     
-    // URL da sua API. Verifique a porta do seu backend!
+    // URL da API.
     const API_URL = "http://localhost:5091"; 
     
-    // Armazena a lista de notas para poder ordenar ou filtrar sem fazer nova requisição
+    // Armazena a lista de notas
     let notasCache = [];
 
-    // Variável para controlar a direção da ordenação (true = crescente, false = decrescente)
+    // Variável para controlar a direção da ordenação
     let isAscending = true;
 
     // Função para renderizar a tabela com uma lista de notas
@@ -15,7 +15,7 @@ $(document).ready(function() {
         $tabelaCorpo.empty();
 
         if (notas.length === 0) {
-            $tabelaCorpo.append('<tr><td colspan="5" class="text-center">Nenhuma nota fiscal cadastrada</td></tr>');
+            $tabelaCorpo.append('<tr><td colspan="6" class="text-center">Nenhuma nota fiscal cadastrada</td></tr>');
             $("#totalNotas").text("0");
             $("#valorTotal").text("R$ 0,00");
         } else {
@@ -27,6 +27,11 @@ $(document).ready(function() {
 
                 $tabelaCorpo.append(
                     `<tr>
+                        <td>
+                            <button class="btn btn-sm btn-danger btn-deletar" data-id="${nota.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
                         <td>${nota.numeroDaNota}</td>
                         <td>${nota.nomeCliente}</td>
                         <td>R$ ${nota.valor.toFixed(2).replace('.', ',')}</td>
@@ -60,7 +65,7 @@ $(document).ready(function() {
     // Chama a função para listar as notas quando a página carregar
     listarNotas();
     
-    // Lida com o envio do formulário de cadastro
+    // Envio do formulario de cadastro
     $("#form-cadastro").submit(function(e) {
         e.preventDefault();
 
@@ -81,21 +86,13 @@ $(document).ready(function() {
                 $("#form-cadastro")[0].reset();
                 listarNotas();
             },
-            error: function(jqXHR) {
-                const erro = jqXHR.responseJSON;
-                let mensagemErro = "Ocorreu um erro ao cadastrar a nota fiscal.";
-                if (erro && erro.errors) {
-                    mensagemErro = "Erros de validação:\n";
-                    for (const key in erro.errors) {
-                        mensagemErro += `- ${erro.errors[key].join(', ')}\n`;
-                    }
-                }
-                alert(mensagemErro);
+            error: function() {
+                alert("Ocorreu um erro ao deletar a nota fiscal.");
             }
         });
     });
 
-    // Lida com a funcionalidade de filtro
+    // Funcionalidade de filtro
     $("#filtro").on("keyup", function() {
         const termoBusca = $(this).val();
         if (termoBusca === "") {
@@ -115,20 +112,36 @@ $(document).ready(function() {
         }
     });
 
-    // Lida com a funcionalidade de ordenação
+    // Funcionalidade de ordenação
     $("#btn-ordenar").on("click", function() {
         if (isAscending) {
-            // Ordena a lista em cache em ordem crescente
             notasCache.sort((a, b) => a.valor - b.valor);
         } else {
-            // Ordena a lista em cache em ordem decrescente
             notasCache.sort((a, b) => b.valor - a.valor);
         }
 
-        // Inverte a direção da ordenação para o próximo clique
         isAscending = !isAscending;
 
-        // Renderiza a tabela com a lista ordenada
         renderizarTabela(notasCache); 
+    });
+
+    // Clique no botão de deletar
+    $("#tabela-notas").on("click", ".btn-deletar", function() {
+        const notaId = $(this).data("id");
+        
+        // Confirma se o usuário realmente quer deletar
+        if (confirm("Tem certeza que deseja deletar esta nota fiscal?")) {
+            $.ajax({
+                url: `${API_URL}/NotasFiscais/${notaId}`, 
+                type: "DELETE",
+                success: function() {
+                    alert("Nota fiscal deletada com sucesso!");
+                    listarNotas();
+                },
+                error: function() {
+                    alert("Ocorreu um erro ao deletar a nota fiscal.");
+                }
+            });
+        }
     });
 });
