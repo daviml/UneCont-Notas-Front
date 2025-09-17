@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Notas Fiscais</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+    <header class="bg-primary text-white p-3 mb-4">
+        <div class="container">
+            <h1>Sistema de Notas Fiscais</h1>
+            <p>Gestão completa de notas fiscais</p>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                Nova Nota Fiscal
+            </div>
+            <div class="card-body">
+                <form id="form-cadastro">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="numeroNota" class="form-label">Número da Nota *</label>
+                            <input type="text" class="form-control" id="numeroNota" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cliente" class="form-label">Cliente *</label>
+                            <input type="text" class="form-control" id="cliente" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="valor" class="form-label">Valor (R$) *</label>
+                            <input type="number" step="0.01" class="form-control" id="valor" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dataEmissao" class="form-label">Data de Emissão *</label>
+                            <input type="date" class="form-control" id="dataEmissao" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Cadastrar Nota Fiscal</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mb-4 text-center">
+            <div class="col-md-6">
+                <div class="card p-3 bg-info text-white">
+                    <h5>Total de Notas</h5>
+                    <p id="totalNotas" class="h3">0</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-3 bg-success text-white">
+                    <h5>Valor Total</h5>
+                    <p id="valorTotal" class="h3">R$ 0,00</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                Notas Fiscais Cadastradas
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="text" id="filtro" class="form-control" placeholder="Buscar por cliente...">
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btn-ordenar" class="btn btn-outline-secondary w-100">
+                            Ordenar por Valor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Cliente</th>
+                                <th>Valor</th>
+                                <th>Data Emissão</th>
+                                <th>Data Cadastro</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-notas">
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    Nenhuma nota fiscal cadastrada
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.3.1/decimal.min.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
